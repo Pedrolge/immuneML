@@ -9,6 +9,7 @@ from pathlib import Path
 from immuneML.caching.CacheType import CacheType
 from immuneML.dsl.ImmuneMLParser import ImmuneMLParser
 from immuneML.dsl.semantic_model.SemanticModel import SemanticModel
+from immuneML.dsl.symbol_table.SymbolTable import SymbolTable
 from immuneML.dsl.symbol_table.SymbolType import SymbolType
 from immuneML.environment.Constants import Constants
 from immuneML.environment.EnvironmentSettings import EnvironmentSettings
@@ -50,11 +51,19 @@ class ImmuneMLApp:
         model = SemanticModel([instruction.item for instruction in instructions], self._result_path, output)
         result = model.run()
 
+        self.publish_results(output, symbol_table, result)
         self.clear_cache()
 
         print(f"{datetime.datetime.now()}: ImmuneML: finished analysis.\n", flush=True)
 
         return result
+
+    def publish_results(self, output, symbol_table: SymbolTable, instruction_state):
+        if 'destination' in output.keys():
+            if output['destination']:
+                mlflows = symbol_table.get_by_type(SymbolType.MLFLOW)
+                for dest in mlflows:
+                    dest.item.publish_results(instruction_state)
 
 
 def run_immuneML(namespace: argparse.Namespace):

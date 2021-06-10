@@ -5,6 +5,7 @@ from immuneML.dsl.DefaultParamsLoader import DefaultParamsLoader
 from immuneML.dsl.definition_parsers.DefinitionParserOutput import DefinitionParserOutput
 from immuneML.dsl.definition_parsers.EncodingParser import EncodingParser
 from immuneML.dsl.definition_parsers.MLParser import MLParser
+from immuneML.dsl.definition_parsers.MLflowParser import MLflowParser
 from immuneML.dsl.definition_parsers.MotifParser import MotifParser
 from immuneML.dsl.definition_parsers.PreprocessingParser import PreprocessingParser
 from immuneML.dsl.definition_parsers.ReportParser import ReportParser
@@ -45,6 +46,7 @@ class DefinitionParser:
         symbol_table, specs_encoding = DefinitionParser._call_if_exists("encodings", EncodingParser.parse, specs, symbol_table)
         symbol_table, specs_ml = DefinitionParser._call_if_exists("ml_methods", MLParser.parse, specs, symbol_table)
         symbol_table, specs_report = DefinitionParser._call_if_exists("reports", ReportParser.parse_reports, specs, symbol_table)
+        symbol_table, specs_mlflow = DefinitionParser._call_if_exists("output", MLflowParser.parse, specs, symbol_table)
         symbol_table, specs_import = ImportParser.parse(specs, symbol_table, result_path)
 
         specs_defs = DefinitionParser.create_specs_defs(specs_import, specs_simulation, specs_preprocessing, specs_motifs, specs_signals,

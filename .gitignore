@@ -39,3 +39,5 @@ venv/
 # temporary files and folders
 tmp/
 .vscode/settings.json
+
+sample/
